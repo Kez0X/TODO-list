@@ -1,30 +1,151 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TaskController!{% endblock %}
+{% block title %}Bienvenue sur l'éditeur de tâches!{% endblock %}
 
 {% block body %}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        padding: 20px;
+        height: 90%;
+    }
+
+    .container {
+        background: #fff;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        width: 100%;
+        max-width: 100%;
+        padding: 30px;
+        box-sizing: border-box;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    h1 {
+        color: #333;
+        text-align: left;
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+
+    p {
+        color: #555;
+        font-size: 18px;
+        line-height: 1.6;
+    }
+
+    a, button {
+        text-decoration: none;
+        background-color: #007BFF;
+        color: white;
+        padding: 12px 25px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-size: 16px;
+    }
+
+    a:hover, button:hover {
+        background-color: #0056b3;
+    }
+
+    .task {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px;
+        margin: 12px 0;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .task p {
+        margin: 0;
+        font-size: 18px;
+        color: #333;
+        flex: 1;
+    }
+
+    .task button {
+        background-color: #ff4d4d;
+        padding: 8px 15px;
+        font-size: 16px;
+        border-radius: 5px;
+    }
+
+    .task button:hover {
+        background-color: #cc0000;
+    }
+
+    .form-section {
+        margin-top: 30px;
+        text-align: left;
+    }
+
+    .form-section a {
+        display: inline-block;
+        margin-top: 10px;
+        font-size: 16px;
+        margin-left: 20px;
+        margin-bottom : 20px;
+    }
+
+    /* Spacing between the list and the form section */
+    .task-list {
+        margin-bottom: 20px;
+    }
+
 </style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+<div class="container">
+    <h1>Bienvenue sur l'éditeur de tâches!</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/home/lukab/.local/share/Trash/files/todolist/src/Controller/TaskController.php</code></li>
-        <li>Your template at <code>/home/lukab/.local/share/Trash/files/todolist/templates/task/index.html.twig</code></li>
-    </ul>
+    {% if app.user %}
+        <p>Bonjour {{ app.user.email }} !</p>
 
-    {% for task in tasks %}
-        <p>{{ task.title }} - {{ task.isDone ? '✅' : '❌' }}</p>
-        <form action="{{ path('app_task_delete', {'id': task.id}) }}" method="post">
-            <button type="submit">🗑 Supprimer</button>
-        </form>
-    {% endfor %}
-    
-
-
+        <h2>Vos tâches :</h2>
+        <div class="task-list">
+            {% if tasks is empty %}
+                <p>Aucune tâche enregistrée pour le moment.</p>
+            {% else %}
+                {% for task in tasks %}
+                    <div class="task">
+                        <p>{{ task.name }} - {{ task.isDone ? '✅' : '❌' }} - {{ task.createdAt|date('d/m/Y H:i') }}</p>
+                        {% if not task.isDone %}
+                            <!-- Si la tâche n'est pas terminée, afficher le bouton Valider -->
+                            <form action="{{ path('app_task_check', {'id': task.id}) }}" method="post" style="margin-right: 10px;">
+                                <button type="submit">✅ Valider</button>
+                            </form>
+                        {% endif %}
+                        
+                        <!-- Toujours afficher le bouton Supprimer -->
+                        <form action="{{ path('app_task_delete', {'id': task.id}) }}" method="post">
+                            <button type="submit">🗑 Supprimer</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        <div class="form-section">
+            <a href="{{ path('app_task_new') }}">Créer une nouvelle tâche</a>
+            <form action="{{ path('app_logout') }}" method="post">
+                <button type="submit">Se déconnecter</button>
+            </form>
+        </div>
+    {% else %}
+        <p>Vous devez être connecté pour voir vos tâches.</p>
+        <div class="form-section">
+            <a href="{{ path('app_login') }}">Se connecter</a>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

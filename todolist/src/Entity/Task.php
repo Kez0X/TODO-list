@@ -3,8 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TaskRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
 class Task
@@ -15,82 +15,66 @@ class Task
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $title = null;
+    private ?string $name = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $description = null;
+    #[ORM\Column(type: "boolean")]
+    private bool $isDone = false;
 
-    #[ORM\Column]
-    private ?bool $is_done = null;
+    #[ORM\Column(type: 'datetime_immutable')]
+    private \DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $end_date = null;
+    // Relation avec l'utilisateur
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tasks')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $created_at = null;
-
+    // Getters et setters
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getName(): ?string
     {
-        return $this->title;
+        return $this->name;
     }
 
-    public function setTitle(string $title): static
+    public function setName(string $name): self
     {
-        $this->title = $title;
-
+        $this->name = $name;
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function isIsDone(): bool
     {
-        return $this->description;
+        return $this->isDone;
     }
 
-    public function setDescription(?string $description): static
+    public function setIsDone(bool $isDone): self
     {
-        $this->description = $description;
-
+        $this->isDone = $isDone;
         return $this;
     }
 
-    public function isDone(): ?bool
+    public function getCreatedAt(): \DateTimeImmutable
     {
-        return $this->is_done;
+        return $this->createdAt;
     }
 
-    public function setIsDone(bool $is_done): static
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
-        $this->is_done = $is_done;
-
+        $this->createdAt = $createdAt;
         return $this;
     }
 
-    public function getEndDate(): ?\DateTimeInterface
+    public function getUser(): ?User
     {
-        return $this->end_date;
+        return $this->user;
     }
 
-    public function setEndDate(?\DateTimeInterface $end_date): static
+    public function setUser(?User $user): self
     {
-        $this->end_date = $end_date;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
-    {
-        $this->created_at = $created_at;
-
+        $this->user = $user;
         return $this;
     }
 }

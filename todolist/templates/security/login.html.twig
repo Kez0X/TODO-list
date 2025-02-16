@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier Tâche{% endblock %}
+{% block title %}Connexion{% endblock %}
 
 {% block body %}
 <style>
@@ -20,7 +20,7 @@
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
         width: 100%;
-        max-width: 500px;
+        max-width: 400px;
         padding: 30px;
         box-sizing: border-box;
     }
@@ -33,17 +33,16 @@
     }
 
     .form-group {
-        margin-bottom: 20px;
+        margin-bottom: 15px;
     }
 
     label {
         display: block;
         color: #555;
         font-size: 16px;
-        margin-bottom: 8px;
     }
 
-    input, button {
+    input {
         width: 100%;
         padding: 12px;
         margin-top: 8px;
@@ -54,15 +53,20 @@
         box-sizing: border-box;
     }
 
-    input:focus, button:focus {
-        outline: none;
+    input:focus {
         border-color: #007BFF;
+        outline: none;
         background-color: #f0faff;
     }
 
     button {
+        width: 100%;
+        padding: 12px;
         background-color: #007BFF;
         color: white;
+        border-radius: 5px;
+        border: none;
+        font-size: 16px;
         cursor: pointer;
         transition: background-color 0.3s ease;
     }
@@ -71,22 +75,38 @@
         background-color: #0056b3;
     }
 
-    .form-group button {
-        margin-top: 20px;
+    .error-message {
+        color: red;
+        margin-bottom: 15px;
+        text-align: center;
     }
 </style>
 
 <div class="container">
-    <h1>Modifier la tâche</h1>
+    <h1>Connexion</h1>
 
-    {{ form_start(form) }}
+    {% if error %}
+        <div class="error-message">
+            ⚠️ {{ error.messageKey|trans(error.messageData, 'security') }}
+        </div>
+    {% endif %}
+
+    <form method="post" action="{{ path('app_login') }}">
         <div class="form-group">
-            {{ form_row(form.title, {'label': 'Titre de la tâche'}) }}
+            <label for="email">Email :</label>
+            <input type="email" id="email" name="email" value="{{ last_username }}" required>
         </div>
 
         <div class="form-group">
-            {{ form_row(form.save) }}
+            <label for="_password">Mot de passe :</label>
+            <input type="password" id="password" name="password" required>
         </div>
-    {{ form_end(form) }}
+
+        <div>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
+        </div>
+
+        <button type="submit">Se connecter</button>
+    </form>
 </div>
 {% endblock %}

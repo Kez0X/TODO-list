@@ -1,4 +1,92 @@
-{{ form_start(form) }}
-    {{ form_row(form.title) }}
-    {{ form_row(form.save) }}
-{{ form_end(form) }}
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Tâche{% endblock %}
+
+{% block body %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        background: #fff;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        width: 100%;
+        max-width: 500px;
+        padding: 30px;
+        box-sizing: border-box;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        color: #555;
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    input, button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        background-color: #fafafa;
+        box-sizing: border-box;
+    }
+
+    input:focus, button:focus {
+        outline: none;
+        border-color: #007BFF;
+        background-color: #f0faff;
+    }
+
+    button {
+        background-color: #007BFF;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    .form-group button {
+        margin-top: 20px;
+    }
+</style>
+
+<div class="container">
+    <h1>Créer une nouvelle tâche</h1>
+
+    {{ form_start(form) }}
+        <div class="form-group">
+            {{ form_row(form.name, {'label': 'Titre de la tâche'}) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_row(form.save) }}
+        </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}
