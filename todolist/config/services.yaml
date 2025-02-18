@@ -10,11 +10,6 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-        
-    App\Command\CreateUserCommand:
-        arguments:
-            $entityManager: '@doctrine.orm.entity_manager'
-            $passwordHasher: '@security.password_hasher'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
